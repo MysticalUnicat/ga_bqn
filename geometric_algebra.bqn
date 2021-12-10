@@ -1,57 +1,117 @@
-⟨ _geometricAlgebra ⟩⇐
+⟨ Algebra ⟩⇐
 
-_geometricAlgebra ← {
-  p‿q‿r ← 𝕗
+Algebra ← {
+  p‿q‿r ← 𝕩
+  num_dimensions ← ⌊ +´ 𝕩
+  num_basis ← 2⋆num_dimensions
+	
+	one_vector_metric ← 1‿r‿p‿q / 1‿0‿1‿¯1
 
-  tot ← +´ 𝕗
+	nameset ← 1+↕num_dimensions
+  FromBase2 ← {+´𝕩×2⋆↕≠𝕩}
 
-  ngrades ← 1+tot
-  nbasis ← 2⋆tot
-  metric ← r‿p‿q/0‿1‿¯1
+  bits ← ⌊ 2 | (↕2⋆num_dimensions) ÷⌜ 2⋆↕num_dimensions
+  name ← nameset⊸×˘ bits
+	metric ← ×´˘ name ⊏ one_vector_metric
+  grades ← +´˘ bits
+  
+	cayley ← {
+    a_bits ← 𝕨 ⊏ bits
+    b_bits ← 𝕩 ⊏ bits
+    basis ← FromBase2 a_bits ≠ b_bits
+    a_name ← 𝕨 ⊏ name
+    b_name ← 𝕩 ⊏ name
+    match_sign ← metric ⊑˜ FromBase2 a_bits ∧ b_bits
+		sign ← ((𝕨=0) ∨ (𝕩=0))◶⟨{𝕤
+		  elim ← a_bits ∧ b_bits
+      ae ← a_bits ≠ elim
+      be ← b_bits ≠ elim
+      an ← ae / (ae × ↕num_dimensions)
+      bn ← be / (be × ↕num_dimensions)
+      ¯1⋆ +´ ⥊ an >⌜ bn
+		}, 1˙⟩ @
+    (match_sign × sign)‿basis
+	}⌜˜ ↕2⋆num_dimensions
 
-  ToBinary ← 2{⌽𝕗|⌊∘÷⟜𝕗⍟(↕1+·⌊𝕗⋆⁼1⌈⊢)} # from bqncrate
+	cayley_sign ← 0⊑¨cayley
+	cayley_basis ← 1⊑¨cayley
+	cayley_grade ← cayley_basis ⊏ grades
 
-  basis_bits ← (⍋+´¨)⊸⊏ { ⌽ (-tot)↑ ToBinary }¨ ↕nbasis
-  basis_name ← { ⍋⊸⊏ (↕tot)/˜ 𝕩 }¨ basis_bits
-  basis_grade ← +´¨ basis_bits
-  basis_metric ← 1 <⊸∾ metric ∾ ¯1×{×´metric/˜𝕩}¨(tot+1)↓basis_bits
+	_mkMultivector ← {𝔽○(↑˜⟜num_basis)}
 
-  MulBasis ← {
-    0 𝕊 0 : 0 ;
-    a ← >𝕨⊑basis_bits
-    b ← >𝕩⊑basis_bits
-    +´(a≠b)×2⋆↕tot
+	One ⇐ ⊑
+	E ⇐ {
+    » ⌽ num_basis -⊸↑ 1 ↑˜ +´ 2 ⋆ ⥊ 𝕩
   }
 
-  MulSign ← {
-    0 𝕊 0 : 1 ;
-    an ← 𝕨⊑basis_name
-    bn ← 𝕩⊑basis_name
-    ¯1⋆+´ an ( +´⎉1 <⌜ ) bn
+  _mkProduct ← {
+		sign ← 𝕗 × cayley_sign
+		{   𝕊 a : × One a ;
+		  a 𝕊 b : +´˘ a ×⎉1 sign × cayley_basis ⊏ b
+		} _mkMultivector
   }
 
-  cayley_basis ← MulBasis⌜˜ ↕nbasis
-  cayley_sign ← MulSign⌜˜ ↕nbasis
+  Add ⇐ + _mkMultivector
+  Subtract ⇐ - _mkMultivector
 
-  ToMV ⇐ nbasis⊸↑
+	GeometricProduct ⇐ (1˙⌜˜ grades) _mkProduct
+	ExteriorProduct ⇐ (cayley_grade = +⌜˜ grades) _mkProduct
+	LeftInnerProduct ⇐ (cayley_grade = -˜⌜˜ grades) _mkProduct
+	RightInnerProduct ⇐ (cayley_grade = -⌜˜ grades) _mkProduct
+	RegressiveProduct ⇐ (cayley_grade = -⌜˜ grades) _mkProduct
 
-  _gradeNegate ⇐ {((4|basis_grade) ⊏ 𝕗) × 𝕩}
+	InnerProduct ⇐ LeftInnerProduct
 
-  _grade ⇐ {(𝕗=basis_grade)/ToMV}
-  Reverse ⇐ 1‿1‿¯1‿¯1 _gradeNegate
-  Involute ⇐ 1‿¯1‿1‿¯1 _gradeNegate
-  Conjugate ⇐ 1‿¯1‿¯1‿1 _gradeNegate
+	Log ⇐ {
+    ""˙ 𝕩
+  }
 
-  HodgeDual ⇐ {⌽○ToMV𝕩}
+	Negate ⇐ -∘↑˜⟜num_basis
+	Reverse ⇐ (1‿1‿¯1‿¯1 ⊏˜ 4 | grades)⊸× _mkMultivector
+	Involute ⇐ (1‿¯1‿1‿¯1 ⊏˜ 4 | grades)⊸× _mkMultivector
+	Conjugate ⇐ (1‿¯1‿¯1‿1 ⊏˜ 4 | grades)⊸× _mkMultivector
   
-  Dual ⇐ r=0◶HodgeDual‿{(-nbasis)↑1×𝕩}
-  
-  Mul ⇐ {+´⎉1 cayley_sign × (cayley_basis⊏𝕩) ×⎉1 𝕨}○ToMV
-  Add ⇐ +○ToMV
-  Sub ⇐ -○ToMV
+  Inverse ⇐ ((5⌊num_dimensions)◶÷‿{
+    i ← Involute 𝕩
+    i ÷⟜One (𝕩 GeometricProduct i)
+  }‿{
+    c ← Conjugate 𝕩
+    c ÷⟜One (𝕩 GeometricProduct c)
+  }‿{
+    i ← Involute 𝕩
+    c ← Conjugate 𝕩
+    r ← Reverse 𝕩
+    left ← GeometricProduct´ r‿i‿c
+    right ← GeometricProduct´ 𝕩‿c‿i‿r
+    left ÷⟜One right
+  }‿{
+    c ← Conjugate 𝕩
+    xc ← 𝕩 GeometricProduct c
+    mxc ← (grades ∊ 3‿4) × xc
+    (c GeometricProduct mxc) ÷⟜One (xc GeometricProduct mxc)
+  }‿{
+    #c ← Conjugate 𝕩
+    #i ← Involute 𝕩
+    #r ← Reverse 𝕩
+    #cir ← c Mul i Mul r
+    #mxcir ← 1‿4 Map 𝕩 Mul cir
+    #cirmxcir ← cir Mul mxcir
+    #left ← cirmxcir
+    #right ← 𝕩 Mul cirmxcir
+    #left ÷⟜One right
+    𝕩
+  }‿{
+    # shirokov inverse
+    #n ← 2⋆⌊(tot+1÷2)
+    #self ← 𝕩
+    #uk ← 1 { self Mul 𝕨 Sub 𝕩 × One 𝕨 }´ n⊸÷¨ 1↓↕n
+    𝕩
+  }) _mkMultivector
 
-  Norm ⇐ {√|1⊑Conjugate⊸Mul˜𝕩}
-  Normalize ⇐ Div⟜Norm
+  Divide ⇐ { Inverse 𝕩 ; 𝕨 GeometricProduct Inverse 𝕩 }
+
+  Length ⇐ { √ | One 𝕩 GeometricProduct Conjugate 𝕩 } _mkMultivector
+  Normalize ⇐ { 𝕩 × ÷ Length 𝕩 }
   
+  Sandwich ⇐ { 𝕨 GeometricProduct 𝕩 GeometricProduct Reverse 𝕨 }
 }
-
