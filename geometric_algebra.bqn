@@ -1,47 +1,28 @@
 ⟨ Algebra ⟩⇐
 
 Algebra ← {
-  p‿q‿r ← 𝕩
-  num_dimensions ← ⌊ +´ 𝕩
+  dimensions ← 𝕩
+  p‿q‿r ← dimensions
+  num_dimensions ← +´ dimensions
   num_basis ← 2⋆num_dimensions
-	
-	one_vector_metric ← 1‿r‿p‿q / 1‿0‿1‿¯1
-
-	nameset ← 1+↕num_dimensions
-  FromBase2 ← {+´𝕩×2⋆↕≠𝕩}
-
-  bits ← ⌊ 2 | (↕2⋆num_dimensions) ÷⌜ 2⋆↕num_dimensions
-  name ← nameset⊸×˘ bits
-	metric ← ×´˘ name ⊏ one_vector_metric
-  grades ← +´˘ bits
-  
-	cayley ← {
-    a_bits ← 𝕨 ⊏ bits
-    b_bits ← 𝕩 ⊏ bits
-    basis ← FromBase2 a_bits ≠ b_bits
-    a_name ← 𝕨 ⊏ name
-    b_name ← 𝕩 ⊏ name
-    match_sign ← metric ⊑˜ FromBase2 a_bits ∧ b_bits
-		sign ← ((𝕨=0) ∨ (𝕩=0))◶⟨{𝕤
-		  elim ← a_bits ∧ b_bits
-      ae ← a_bits ≠ elim
-      be ← b_bits ≠ elim
-      an ← ae / (ae × ↕num_dimensions)
-      bn ← be / (be × ↕num_dimensions)
-      ¯1⋆ +´ ⥊ an >⌜ bn
-		}, 1˙⟩ @
-    (match_sign × sign)‿basis
-	}⌜˜ ↕2⋆num_dimensions
-
-	cayley_sign ← 0⊑¨cayley
-	cayley_basis ← 1⊑¨cayley
-	cayley_grade ← cayley_basis ⊏ grades
+  one_vector_metric ← 1‿r‿p‿q / 1‿0‿1‿¯1
+  full_name ← 1+↕num_dimensions
+  bits ← (⍋∘(+´¨))⊸⊏ ⌽¨ ⥊↕num_dimensions⥊2
+  name ← full_name⊸×¨ bits
+  ename ← "" <⊸∾ 1↓ bits { 'e' <⊸∾ '0' + 𝕨/𝕩 - r>0 }¨ name
+  grade ← +´¨ bits
+  cayley_basis ← bits ⊐ ≠⌜˜ bits
+  cayley_match ← ∧⌜˜ bits
+  cayley_match_sign ← ×´¨ ⊏⟜one_vector_metric¨ full_name⊸×¨ cayley_match
+  cayley_swap_sign ← ¯1 ⋆ {+´ ⥊ 𝕩⊸<˘ 𝕨}⌜˜ (bits /¨ name)
+  cayley_sign ← cayley_match_sign × cayley_swap_sign
+  cayley_grade ← cayley_basis ⊏ grade
 
 	_mkMultivector ← {𝔽○(↑˜⟜num_basis)}
 
 	One ⇐ ⊑
 	E ⇐ {
-    » ⌽ num_basis -⊸↑ 1 ↑˜ +´ 2 ⋆ ⥊ 𝕩
+  	num_basis ↑ 1 ↑˜ - 1 + ⊑ bits ⊐ <full_name ∊ ⥊ (𝕩 + r>0)
   }
 
   _mkProduct ← {
@@ -54,22 +35,28 @@ Algebra ← {
   Add ⇐ + _mkMultivector
   Subtract ⇐ - _mkMultivector
 
-	GeometricProduct ⇐ (1˙⌜˜ grades) _mkProduct
-	ExteriorProduct ⇐ (cayley_grade = +⌜˜ grades) _mkProduct
-	LeftInnerProduct ⇐ (cayley_grade = -˜⌜˜ grades) _mkProduct
-	RightInnerProduct ⇐ (cayley_grade = -⌜˜ grades) _mkProduct
-	RegressiveProduct ⇐ (cayley_grade = -⌜˜ grades) _mkProduct
+	GeometricProduct ⇐ (1˙⌜˜ grade) _mkProduct
+	ExteriorProduct ⇐ (cayley_grade = +⌜˜ grade) _mkProduct
+	LeftInnerProduct ⇐ (cayley_grade = -˜⌜˜ grade) _mkProduct
+	RightInnerProduct ⇐ (cayley_grade = -⌜˜ grade) _mkProduct
+	RegressiveProduct ⇐ (cayley_grade = -⌜˜ grade) _mkProduct
 
 	InnerProduct ⇐ LeftInnerProduct
 
 	Log ⇐ {
-    ""˙ 𝕩
+  	num ← 𝕩
+  	nz ← 0≠num
+  	(∨´nz)◶{𝕤
+		  ""
+		}‿{𝕤
+	    { 𝕨∾" + "∾𝕩 }´ {x‿y:(•Fmt x) ∾ y}¨ nz / num ⋈¨ ename
+		} @
   }
 
 	Negate ⇐ -∘↑˜⟜num_basis
-	Reverse ⇐ (1‿1‿¯1‿¯1 ⊏˜ 4 | grades)⊸× _mkMultivector
-	Involute ⇐ (1‿¯1‿1‿¯1 ⊏˜ 4 | grades)⊸× _mkMultivector
-	Conjugate ⇐ (1‿¯1‿¯1‿1 ⊏˜ 4 | grades)⊸× _mkMultivector
+	Reverse ⇐ (1‿1‿¯1‿¯1 ⊏˜ 4 | grade)⊸× _mkMultivector
+	Involute ⇐ (1‿¯1‿1‿¯1 ⊏˜ 4 | grade)⊸× _mkMultivector
+	Conjugate ⇐ (1‿¯1‿¯1‿1 ⊏˜ 4 | grade)⊸× _mkMultivector
   
   Inverse ⇐ ((5⌊num_dimensions)◶÷‿{
     i ← Involute 𝕩
@@ -87,7 +74,7 @@ Algebra ← {
   }‿{
     c ← Conjugate 𝕩
     xc ← 𝕩 GeometricProduct c
-    mxc ← (grades ∊ 3‿4) × xc
+    mxc ← (grade ∊ 3‿4) × xc
     (c GeometricProduct mxc) ÷⟜One (xc GeometricProduct mxc)
   }‿{
     #c ← Conjugate 𝕩

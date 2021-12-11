@@ -12,8 +12,8 @@
 
   ! ∧´ e0   = 0‿1‿0‿0‿0‿0‿0‿0
   ! ∧´ e1   = 0‿0‿1‿0‿0‿0‿0‿0
-  ! ∧´ e2   = 0‿0‿0‿0‿1‿0‿0‿0
-  ! ∧´ e01  = 0‿0‿0‿1‿0‿0‿0‿0
+  ! ∧´ e2   = 0‿0‿0‿1‿0‿0‿0‿0
+  ! ∧´ e01  = 0‿0‿0‿0‿1‿0‿0‿0
   ! ∧´ e02  = 0‿0‿0‿0‿0‿1‿0‿0
   ! ∧´ e12  = 0‿0‿0‿0‿0‿0‿1‿0
   ! ∧´ e012 = 0‿0‿0‿0‿0‿0‿0‿1
@@ -21,9 +21,10 @@
   Point ← {x‿y: +´ x‿y‿1 × e02‿e01‿e12}
 
   p0 ← Point⟨1, 2⟩
-  ! ∧´ p0 = 0‿0‿0‿2‿0‿1‿1‿0
-  ! ∧´ (2 ga.GeometricProduct p0) = 0‿0‿0‿4‿0‿2‿2‿0
-  ! ∧´ (p0 ga.GeometricProduct p0) = ¯1‿0‿0‿0‿0‿0‿0‿0
+  ! ∧´ p0 = 0‿0‿0‿0‿2‿1‿1‿0
+  ! ∧´ (2 ga.GeometricProduct p0) = 0‿0‿0‿0‿4‿2‿2‿0
+  #! ∧´ (p0 ga.GeometricProduct p0) = ¯1‿0‿0‿0‿0‿0‿0‿0
+  •Show p0 ga.GeometricProduct p0
 } @
 
 #----------------------------------------------------------
@@ -85,15 +86,15 @@ rotated_point ← rot ga.Sandwich px
 
 point_on_plane ← (p ga.InnerProduct px) ga.GeometricProduct p
 
-•Show "a point        : " ⋈ ga.Log px
-•Show "a line         : " ⋈ ga.Log line
-•Show "a plane        : " ⋈ ga.Log p
-•Show "a rotor        : " ⋈ ga.Log rot
-•Show "rotated line   : " ⋈ ga.Log rotated_line
-•Show "rotated point  : " ⋈ ga.Log rotated_point
-•Show "rotated_plane  : " ⋈ ga.Log rotated_plane
-•Show "point on plane : " ⋈ ga.Log ga.Normalize point_on_plane
-•Show "point on torus : " ⋈ ga.Log PointOnTorus⟨0, 0⟩
+•Show "a point        : " ∾ ga.Log px
+•Show "a line         : " ∾ ga.Log line
+•Show "a plane        : " ∾ ga.Log p
+•Show "a rotor        : " ∾ ga.Log rot
+•Show "rotated line   : " ∾ ga.Log rotated_line
+•Show "rotated point  : " ∾ ga.Log rotated_point
+•Show "rotated_plane  : " ∾ ga.Log rotated_plane
+•Show "point on plane : " ∾ ga.Log ga.Normalize point_on_plane
+•Show "point on torus : " ∾ ga.Log PointOnTorus⟨0, 0⟩
 •Show ga.Log (e0 ga.Subtract 1)
 •Show ga.Log (1 ga.Subtract e0)
 
