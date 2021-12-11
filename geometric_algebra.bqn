@@ -18,6 +18,8 @@ Algebra ← {
   cayley_sign ← cayley_match_sign × cayley_swap_sign
   cayley_grade ← cayley_basis ⊏ grade
 
+  cayley_table ⇐ cayley_sign ⋈¨ cayley_basis
+
 	_mkMultivector ← {𝔽○(↑˜⟜num_basis)}
 
 	One ⇐ ⊑
@@ -28,7 +30,7 @@ Algebra ← {
   _mkProduct ← {
 		sign ← 𝕗 × cayley_sign
 		{   𝕊 a : × One a ;
-		  a 𝕊 b : +´˘ a ×⎉1 sign × cayley_basis ⊏ b
+		  a 𝕊 b : +´¨ cayley_basis ⊔ sign × 𝕨 ×⌜ 𝕩
 		} _mkMultivector
   }
 
