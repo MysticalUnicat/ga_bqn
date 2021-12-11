@@ -86,15 +86,15 @@ rotated_point ← rot ga.Sandwich px
 
 point_on_plane ← (p ga.InnerProduct px) ga.GeometricProduct p
 
-•Show "a point        : " ∾ ga.Log px
-•Show "a line         : " ∾ ga.Log line
-•Show "a plane        : " ∾ ga.Log p
-•Show "a rotor        : " ∾ ga.Log rot
-•Show "rotated line   : " ∾ ga.Log rotated_line
-•Show "rotated point  : " ∾ ga.Log rotated_point
-•Show "rotated_plane  : " ∾ ga.Log rotated_plane
-•Show "point on plane : " ∾ ga.Log ga.Normalize point_on_plane
-•Show "point on torus : " ∾ ga.Log PointOnTorus⟨0, 0⟩
-•Show ga.Log (e0 ga.Subtract 1)
-•Show ga.Log (1 ga.Subtract e0)
+•Out "a point        : " ∾ ga.Log px
+•Out "a line         : " ∾ ga.Log line
+•Out "a plane        : " ∾ ga.Log p
+•Out "a rotor        : " ∾ ga.Log rot
+•Out "rotated line   : " ∾ ga.Log rotated_line
+•Out "rotated point  : " ∾ ga.Log rotated_point
+•Out "rotated_plane  : " ∾ ga.Log rotated_plane
+•Out "point on plane : " ∾ ga.Log ga.Normalize point_on_plane
+•Out "point on torus : " ∾ ga.Log PointOnTorus⟨0, 0⟩
+•Out ga.Log (e0 ga.Subtract 1)
+•Out ga.Log (1 ga.Subtract e0)
 
