@@ -20,45 +20,45 @@ Algebra ← {
 
   cayley_table ⇐ cayley_sign ⋈¨ cayley_basis
 
-	_mkMultivector ← {𝔽○(↑˜⟜num_basis)}
+  _mkMultivector ← {𝔽○(↑˜⟜num_basis)}
 
-	One ⇐ ⊑
-	E ⇐ {
-  	num_basis ↑ 1 ↑˜ - 1 + ⊑ bits ⊐ <full_name ∊ ⥊ (𝕩 + r>0)
+  One ⇐ ⊑
+  E ⇐ {
+    num_basis ↑ 1 ↑˜ - 1 + ⊑ bits ⊐ <full_name ∊ ⥊ (𝕩 + r>0)
   }
 
   _mkProduct ← {
-		sign ← 𝕗 × cayley_sign
-		{   𝕊 a : × One a ;
-		  a 𝕊 b : +´¨ cayley_basis ⊔ sign × 𝕨 ×⌜ 𝕩
-		} _mkMultivector
+    sign ← 𝕗 × cayley_sign
+    {   𝕊 a : × One a ;
+      a 𝕊 b : +´¨ cayley_basis ⊔ sign × 𝕨 ×⌜ 𝕩
+    } _mkMultivector
   }
 
   Add ⇐ + _mkMultivector
   Subtract ⇐ - _mkMultivector
 
-	GeometricProduct ⇐ (1˙⌜˜ grade) _mkProduct
-	ExteriorProduct ⇐ (cayley_grade = +⌜˜ grade) _mkProduct
-	LeftInnerProduct ⇐ (cayley_grade = -˜⌜˜ grade) _mkProduct
-	RightInnerProduct ⇐ (cayley_grade = -⌜˜ grade) _mkProduct
-	RegressiveProduct ⇐ (cayley_grade = -⌜˜ grade) _mkProduct
+  GeometricProduct ⇐ (1˙⌜˜ grade) _mkProduct
+  ExteriorProduct ⇐ (cayley_grade = +⌜˜ grade) _mkProduct
+  LeftInnerProduct ⇐ (cayley_grade = -˜⌜˜ grade) _mkProduct
+  RightInnerProduct ⇐ (cayley_grade = -⌜˜ grade) _mkProduct
+  RegressiveProduct ⇐ (cayley_grade = -⌜˜ grade) _mkProduct
 
-	InnerProduct ⇐ LeftInnerProduct
+  InnerProduct ⇐ LeftInnerProduct
 
-	Log ⇐ {
-  	num ← 𝕩
-  	nz ← 0≠num
-  	(∨´nz)◶{𝕤
-		  ""
-		}‿{𝕤
-	    { 𝕨∾" + "∾𝕩 }´ {x‿y:(•Fmt x) ∾ y}¨ nz / num ⋈¨ ename
-		} @
+  Log ⇐ {
+    num ← 𝕩
+    nz ← 0≠num
+    (∨´nz)◶{𝕤
+      ""
+    }‿{𝕤
+      { 𝕨∾" + "∾𝕩 }´ {x‿y:(•Fmt x) ∾ y}¨ nz / num ⋈¨ ename
+    } @
   }
 
-	Negate ⇐ -∘↑˜⟜num_basis
-	Reverse ⇐ (1‿1‿¯1‿¯1 ⊏˜ 4 | grade)⊸× _mkMultivector
-	Involute ⇐ (1‿¯1‿1‿¯1 ⊏˜ 4 | grade)⊸× _mkMultivector
-	Conjugate ⇐ (1‿¯1‿¯1‿1 ⊏˜ 4 | grade)⊸× _mkMultivector
+  Negate ⇐ -∘↑˜⟜num_basis
+  Reverse ⇐ (1‿1‿¯1‿¯1 ⊏˜ 4 | grade)⊸× _mkMultivector
+  Involute ⇐ (1‿¯1‿1‿¯1 ⊏˜ 4 | grade)⊸× _mkMultivector
+  Conjugate ⇐ (1‿¯1‿¯1‿1 ⊏˜ 4 | grade)⊸× _mkMultivector
   
   Inverse ⇐ ((5⌊num_dimensions)◶÷‿{
     i ← Involute 𝕩

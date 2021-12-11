@@ -37,14 +37,14 @@ e2 ← ga.E 2
 e3 ← ga.E 3
 
 Rotor ← {angle‿line:
-	a ← angle ÷ 2
-	c ← •math.Cos a
-	s ← •math.Sin a
-	c ga.Add s × line
+  a ← angle ÷ 2
+  c ← •math.Cos a
+  s ← •math.Sin a
+  c ga.Add s × line
 }
 
 Translator ← {dist‿line:
-	1 ga.Add (dist ÷ 2) × line
+  1 ga.Add (dist ÷ 2) × line
 }
 
 Plane ← {a‿b‿c‿d : +´ a‿b‿c‿d × e1‿e2‿e3‿e0}
@@ -57,16 +57,16 @@ e021 ← ga.E 0‿2‿1
 Point ← {x‿y‿z: +´ x‿y‿z‿1 × e032‿e013‿e021‿e123}
 
 Circle ← {t‿radius‿line:
-	(Rotor⟨t × 2 × π, line⟩) ga.GeometricProduct Translator⟨radius, e1 ga.GeometricProduct e0⟩
+  (Rotor⟨t × 2 × π, line⟩) ga.GeometricProduct Translator⟨radius, e1 ga.GeometricProduct e0⟩
 }
 
 Torus ← {s‿t‿r1‿l1‿r2‿l2:
-	(Circle⟨s, r2, l2⟩) ga.GeometricProduct Circle⟨t, r1, l1⟩
+  (Circle⟨s, r2, l2⟩) ga.GeometricProduct Circle⟨t, r1, l1⟩
 }
 
 PointOnTorus ← {s‿t:
   to ← Torus⟨s, t, 0.25, e1 ga.GeometricProduct e2, 0.6, e1 ga.GeometricProduct e3⟩
-	to ga.Sandwich e123
+  to ga.Sandwich e123
 }
 
 rot ← Rotor⟨π ÷ 2, e1 ga.GeometricProduct e2⟩
